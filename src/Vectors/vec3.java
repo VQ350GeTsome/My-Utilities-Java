@@ -247,7 +247,7 @@ public class vec3 implements Comparable<vec3> {
     }
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc=" Information Getter Methods ">
+    //<editor-fold defaultstate="collapsed" desc=" Information Calculators ">
     /**
      * Calculates the average of each component.
      * 
@@ -274,7 +274,7 @@ public class vec3 implements Comparable<vec3> {
     /**
      * @return The length of this vector. ( The square root of the sum of each component squared )
      */
-    public float length() { return (float)Math.sqrt(lengthSqrd()); }
+    public float length() { return (float) Math.sqrt(lengthSqrd()); }
     /**
      * @return The length of this vector without taking the square root. Which is effectively
      * the sum of each component squared. This is a cheaper calculation.
