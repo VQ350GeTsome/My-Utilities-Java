@@ -1,6 +1,5 @@
 package ComplexNumbers;
 
-import Vectors.vec3;
 
 public class Quaternion {
     
@@ -23,44 +22,83 @@ public class Quaternion {
      * @param k The k component.
      */
     public Quaternion(float s, float i, float j, float k) { this.s = s; this.i = i; this.j = j; this.k = k; }
+    /**
+     * Constructor that uses a float plus a vec3 object to instantiate this. 
+     * The x, y, & z will correspond to i, j, & k. The float will be the scalar.
+     * 
+     * @param s What will be the scalar of this quaternion.
+     * @param v The vector to be used for the imaginary components.
+     */
+    public Quaternion(float s, Vectors.vec3 v) { this.s = s; i = v.x; j = v.y; k = v.z; }
+    /**
+     * Constructor using a vec4 object. x, y, & z corresponds to i, j, & k.
+     * w will be the scalar value.
+     * 
+     * @param v The vec4 to use. If null this will be equal to the identity quaternion.
+     */
+    public Quaternion(Vectors.vec4 v) { 
+        if (v == null) { s = 1; i = 0; j = 0; k = 0; } 
+        else { s = v.w; i = v.x; j = v.y; k = v.z; }
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" 4-Function Scalar Operators ">
+    public Quaternion add(float f) { return new Quaternion(s + f, i + f, j + f, k + f); }
+    public Quaternion subtract(float f) { return this.add( -f ); }
+    public Quaternion scale(float f) { return new Quaternion(s*f, i*f, j*f, k*f); }
     public Quaternion scaleImag(float f) { return new Quaternion(s, i*f, j*f, k*f); }
+    public Quaternion divide(float f) { return this.scale( 1/f ); }
+    public Quaternion divideImag(float f) { return this.scaleImag( 1/f ); }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" 4-Function Quaternion Operators ">
-    public Quaternion multiply(Quaternion q) {
+    public Quaternion add(Quaternion o) { return new Quaternion(s + o.s, i + o.i, j + o.j, k + o.k); }
+    public Quaternion subtract(Quaternion o) { return this.add(o.negate()); }
+    public Quaternion multiply(Quaternion o) {
         return new Quaternion(
-            s*q.s - i*q.i - j*q.j - k*q.k,
-            s*q.i + i*q.s + j*q.k - k*q.j,
-            s*q.j - i*q.k + j*q.s + k*q.i,
-            s*q.k + i*q.j - j*q.i + k*q.s
+            s*o.s - i*o.i - j*o.j - k*o.k,
+            s*o.i + i*o.s + j*o.k - k*o.j,
+            s*o.j - i*o.k + j*o.s + k*o.i,
+            s*o.k + i*o.j - j*o.i + k*o.s
         );
     }
+    public Quaternion divide(Quaternion o) { return this.multiply(o.inverse()); }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Special Scalar Operators ">
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Special Quaternion Operators ">
-    public vec3 rotate(vec3 v) {
-        if (s == 1 && length() == 1) return v;  //If no rotation just return v.
+    /**
+     * Takes in a vec3 object and rotates it using this quaternion.
+     * 
+     * @param v
+     * @return 
+     */
+    public Vectors.vec3 rotate(Vectors.vec3 v) {
+        if (s == 1 && magnitude() == 1) return v;  //If no rotation just return v.
         Quaternion qv = new Quaternion(0, v.x, v.y, v.z);
         Quaternion res = this.multiply(qv).multiply(this.conjugate());
-        return new vec3(res.i, res.j, res.k);
+        return new Vectors.vec3(res.i, res.j, res.k);
     }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Information Calculators ">
-    public float length() { return (float) Math.sqrt(length()); }
-    public float lengthSqrd() { return s*s + i*i + j*j + k*k; }
+    public float magnitude() { return (float) Math.sqrt(this.magnitude()); }
+    public float magnitudeSquared() { return s*s + i*i + j*j + k*k; }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Transformers ">
+    public Quaternion negate() { return this.scale(-1.0f); }
     public Quaternion normalize() {
-        float l = length();
+        float l = this.magnitude();
         return new Quaternion(s / l, i / l, j / l, k / l);
+    }
+    public Quaternion inverse() {
+        float normSq = this.magnitudeSquared();
+        if (normSq == 0) throw new ArithmeticException("Cannot invert a zero quaternion");
+        Quaternion conj = conjugate();
+        return new Quaternion(conj.s / normSq, conj.i / normSq, conj.j / normSq, conj.k / normSq);
     }
     public Quaternion conjugate() { return new Quaternion(s, -i, -j, -k); }
     //</editor-fold>

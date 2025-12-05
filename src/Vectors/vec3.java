@@ -1,7 +1,5 @@
 package Vectors;
 
-
-
 /**
  * A three component vector class, with many common operations & operators.
  * 
@@ -87,7 +85,7 @@ public class vec3 implements Comparable<vec3> {
      * @param o The subtrahend vector.
      * @return A new vector equal to ( x - o.x , y - o.y , z - o.z ) .
      */
-    public vec3 subtract(vec3 o) { return this.add(o.scale(-1.0f)); }
+    public vec3 subtract(vec3 o) { return this.add(o.negate()); }
     /**
      * Multiplies a vector with another. ( Per-component / Hadamard product )
      * 
@@ -217,34 +215,16 @@ public class vec3 implements Comparable<vec3> {
         float ny = (1 - w) * y + w * o.y;
         float nz = (1 - w) * z + w * o.z;
         return new vec3(nx, ny, nz); 
-    }
+    }  
     
-    //Static methods
     /**
-     * Calculates the cross product given two vectors.
+     * Normalizes the input quaternion, and uses 
+     * it to calculate a new rotated vector.
      * 
-     * @param p The first vector.
-     * @param q The second vector.
-     * @return A new vector orthogonal to both p & q.
+     * @param q The quaternion to be used in the rotating. 
+     * @return A new rotated vector.
      */
-    public static vec3 cross(vec3 p, vec3 q) {
-        return new vec3(
-                p.y * q.z - p.z * q.y,
-                p.z * q.x - p.x * q.z,
-                p.x * q.y - p.y * q.x
-        );
-    }
-    
-    public static vec3 blend(vec3 p, vec3 q, float w) {
-        //Clamp weight
-        w = Math.min(w, 1.0f);
-        w = Math.max(w, 0.0f);
-        
-        float nx = (1 - w) * p.x + w * q.x;
-        float ny = (1 - w) * p.y + w * q.y;
-        float nz = (1 - w) * p.z + w * q.z;
-        return new vec3(nx, ny, nz); 
-    }
+    public vec3 rotate(ComplexNumbers.Quaternion q) { return q.rotate(this); }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Information Calculators ">
