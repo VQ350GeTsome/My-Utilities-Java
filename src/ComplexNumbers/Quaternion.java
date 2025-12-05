@@ -1,7 +1,11 @@
 package ComplexNumbers;
 
-
-public class Quaternion {
+/**
+ * Quaternion class with most common functionality.
+ * 
+ * @author Harrison
+ */
+public class Quaternion implements Comparable<Quaternion> {
     
     //Scalar + the three imaginary components
     public float s, i, j, k;
@@ -315,8 +319,7 @@ public class Quaternion {
     //<editor-fold defaultstate="collapsed" desc=" Hashing & Comparing ">
     @Override
     public int hashCode() { return java.util.Objects.hash(s, i, j, k); }
-    public int compareTo(Quaternion o) {
-        return Float.compare(this.magnitudeSquared(), o.magnitudeSquared());
-    }
+    @Override
+    public int compareTo(Quaternion o) { return Float.compare(this.magnitudeSquared(), o.magnitudeSquared()); }
     //</editor-fold>
 }
