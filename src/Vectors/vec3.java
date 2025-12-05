@@ -40,7 +40,7 @@ public class vec3 implements Comparable<vec3> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" 4-Function Scalar Operators ">
+    //<editor-fold defaultstate="collapsed" desc=" Simple Scalar Operators ">
     /**
      * Adds a scalar to each component.
      * 
@@ -69,9 +69,16 @@ public class vec3 implements Comparable<vec3> {
      * @return 
      */
     public vec3 divide(float f) { return this.scale( 1.0f / f ); }
+    /**
+     * Raises each component by a scalar.
+     * 
+     * @param f The scalar to use as the exponent.
+     * @return A new vector equal to ( x^f , y^f , z^f ) .
+     */
+    public vec3 pow(float f) { return new vec3((float) Math.pow(x, f), (float) Math.pow(y, f), (float) Math.pow(z, f)); }
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc=" 4-Function Vector Operators ">
+    //<editor-fold defaultstate="collapsed" desc=" Simple Vector Operators ">
     /**
      * Component wise addition.
      * 
@@ -100,6 +107,13 @@ public class vec3 implements Comparable<vec3> {
      * @return A new vector equal to ( x / o.x , y / o.y , z / o.z )
      */
     public vec3 divide(vec3 o) { return new vec3( x / o.x , y / o.y , z / o.z ); }
+    /**
+     * Raises each component by the corresponding component of the input vector.
+     * 
+     * @param o The vector that'll be used as the exponent.
+     * @return A new vector equal to ( x^o.x , y^o.y , z^o.z ) .
+     */
+    public vec3 pow(vec3 o) { return new vec3((float) Math.pow(x, o.x), (float) Math.pow(y, o.y), (float) Math.pow(z, o.z)); }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Special Scalar Operators ">

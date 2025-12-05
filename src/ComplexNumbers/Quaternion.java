@@ -42,16 +42,40 @@ public class Quaternion {
     }
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc=" 4-Function Scalar Operators ">
+    //<editor-fold defaultstate="collapsed" desc=" Simple Scalar Operators ">
+    /**
+     * Adds a scalar to each component.
+     * 
+     * @param f The scalar to add.
+     * @return A new Quaternion equal to ( s + f , i + f , j + f , k + f ) .
+     */
     public Quaternion add(float f) { return new Quaternion(s + f, i + f, j + f, k + f); }
+    /**
+     * Subtracts a scalar from each component.
+     * 
+     * @param f The scalar to subtract.
+     * @return A new Quaternion equal to  s - f , i - f , j - f , k - f ) .
+     */
     public Quaternion subtract(float f) { return this.add( -f ); }
+    /**
+     * Scales each component.
+     * 
+     * @param f The scalar value to scale by.
+     * @return A new quaternion equal to ( s * f , i * f , j * f , k * f , ) .
+     */
     public Quaternion scale(float f) { return new Quaternion(s*f, i*f, j*f, k*f); }
+    /**
+     * Scales each imaginary component.
+     * 
+     * @param f The scalar value to scale the imaginary components by.
+     * @return A new quaternion equal to ( s , i * f , j * f , k * f , ) .
+     */
     public Quaternion scaleImag(float f) { return new Quaternion(s, i*f, j*f, k*f); }
     public Quaternion divide(float f) { return this.scale( 1/f ); }
     public Quaternion divideImag(float f) { return this.scaleImag( 1/f ); }
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc=" 4-Function Quaternion Operators ">
+    //<editor-fold defaultstate="collapsed" desc=" Simple Quaternion Operators ">
     public Quaternion add(Quaternion o) { return new Quaternion(s + o.s, i + o.i, j + o.j, k + o.k); }
     public Quaternion subtract(Quaternion o) { return this.add(o.negate()); }
     public Quaternion multiply(Quaternion o) {
@@ -72,10 +96,11 @@ public class Quaternion {
     /**
      * Takes in a vec3 object and rotates it using this quaternion.
      * 
-     * @param v
-     * @return 
+     * @param v The vector to be rotated.
+     * @return A new vec3 that's been rotated in accordance to this quaternion.
      */
     public Vectors.vec3 rotate(Vectors.vec3 v) {
+        if (v == null) return v;
         if (s == 1 && magnitude() == 1) return v;  //If no rotation just return v.
         Quaternion qv = new Quaternion(0, v.x, v.y, v.z);
         Quaternion res = this.multiply(qv).multiply(this.conjugate());
