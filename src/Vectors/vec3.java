@@ -12,23 +12,39 @@ public class vec3 implements Comparable<vec3> {
 
     //<editor-fold defaultstate="collapsed" desc=" Regular Constructors ">
     /**
-     * Default constructor. { 0.0 , 0.0 , 0.0 } .
+     * Default constructor. ( 0 , 0 , 0 ) .
      */
     public vec3() { x = 0.0f; y = 0.0f; z = 0.0f; }
     /**
-     * Constructor with just x component { x, x, x } .
+     * Constructor that fills all components the same.
      * 
-     * @param x The x component.
+     * @param w What each component will be ( w , w , w ) .
      */
-    public vec3(float x) { this.x = x; y = x; z = x; }
+    public vec3(float w) { x = w; y = w; z = w; }
     /**
-     * Full constructor with x , y , & z components { x , y , z } .
+     * Full explicit constructor with x , y , & z components { x , y , z } .
      * 
      * @param x The x component.
      * @param y The y component.
      * @param z The z component.
      */
     public vec3(float x, float y, float z)  { this.x = x; this.y = y; this.z = z; }
+    
+    /**
+     * Constructor using a vec2. The vec2's values will be used for x & y.
+     * 
+     * @param v The vec2 to be used. 
+     * @param z The z component.
+     */
+    public vec3(vec2 v, float z) { x = v.x; y = v.y; this.z = z; }
+    /**
+     * Constructor using a vec2. The vec2's values will be used for y & z.
+     * 
+     * @param x The x component.
+     * @param v The vec2 to be used.
+     */
+    public vec3(float x, vec2 v) { this.x = x; y = v.x; z = v.y; }
+    
     /**
      * Copy constructor.
      * @param copy The vec3 to be copied
@@ -52,7 +68,7 @@ public class vec3 implements Comparable<vec3> {
      * Subtracts a scalar from each component.
      * 
      * @param f The subtrahend scalar.
-     * @return A new vector equal to ( x - f , y - f , z - f) .
+     * @return A new vector equal to ( x - f , y - f , z - f ) .
      */
     public vec3 subtract(float f) { return this.add( -f ); }
     /**
@@ -106,7 +122,7 @@ public class vec3 implements Comparable<vec3> {
      * @param o The dividend.
      * @return A new vector equal to ( x / o.x , y / o.y , z / o.z )
      */
-    public vec3 divide(vec3 o) { return new vec3( x / o.x , y / o.y , z / o.z ); }
+    public vec3 divide(vec3 o) { return this.multiply(o.reciprocal()); }
     /**
      * Raises each component by the corresponding component of the input vector.
      * 
@@ -220,6 +236,13 @@ public class vec3 implements Comparable<vec3> {
      */
     public float dot(vec3 o) { return x * o.x + y * o.y + z * o.z; } 
     
+    /**
+     * Weighted average of two vectors.
+     * 
+     * @param o The other vector.
+     * @param w The weight. [0 , 1]. 0 = this, 1 = other.
+     * @return A new vector that's the weighted average of the two.
+     */
     public vec3 blend(vec3 o, float w) {
         //Clamp the weight
         w = Math.min(w, 1.0f);
@@ -230,15 +253,14 @@ public class vec3 implements Comparable<vec3> {
         float nz = (1 - w) * z + w * o.z;
         return new vec3(nx, ny, nz); 
     }  
-    
     /**
-     * Normalizes the input quaternion, and uses 
-     * it to calculate a new rotated vector.
+     * Weighted average of two vectors.
      * 
-     * @param q The quaternion to be used in the rotating. 
-     * @return A new rotated vector.
+     * @param o The other vector.
+     * @param w The weight. [0 , 1]. 0 = this, 1 = other.
+     * @return A new vector that's the weighted average of the two.
      */
-    public vec3 rotate(ComplexNumbers.Quaternion q) { return q.rotate(this); }
+    public vec3 wAvg(vec3 o, float w) { return blend(o, w); }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Information Calculators ">
@@ -285,6 +307,10 @@ public class vec3 implements Comparable<vec3> {
      * @return A new vector that is equal to ( -x , -y , -z ) .
      */
     public vec3 negate() { return this.scale(-1.0f); }
+    /**
+     * @return A new vector equal to ( 1/x , 1/y , 1/z ) .
+     */
+    public vec3 reciprocal() { return new vec3(1/x, 1/y, 1/z); }
     
     /**
      * Calculates the length of this vector and divides each 
@@ -323,6 +349,15 @@ public class vec3 implements Comparable<vec3> {
         
         return new vec3(nx, ny, nz);
     }
+    
+    /**
+     * Normalizes the input quaternion, and uses 
+     * it to calculate a new rotated vector.
+     * 
+     * @param q The quaternion to be used in the rotating. 
+     * @return A new rotated vector.
+     */
+    public vec3 rotate(ComplexNumbers.Quaternion q) { return q.rotate(this); }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc=" java.awt.Color methods & constructors ">
@@ -404,13 +439,11 @@ public class vec3 implements Comparable<vec3> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" Hashing & Comparing ">
+    //<editor-fold defaultstate="collapsed" desc=" Overrides ">
     @Override
     public int hashCode() { return java.util.Objects.hash(x, y, z); }
     @Override
-    public int compareTo(vec3 o) {
-        return Float.compare(lengthSqrd(), o.lengthSqrd());
-    }
+    public int compareTo(vec3 o) { return Float.compare(lengthSqrd(), o.lengthSqrd()); }
     //</editor-fold>
     
 }

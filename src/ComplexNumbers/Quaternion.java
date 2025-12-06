@@ -3,7 +3,7 @@ package ComplexNumbers;
 /**
  * Quaternion class with most common functionality.
  * 
- * @author Harrison
+ * @author Harrison Davis
  */
 public class Quaternion implements Comparable<Quaternion> {
     
@@ -316,7 +316,7 @@ public class Quaternion implements Comparable<Quaternion> {
     }
     //</editor-fold>
     
-    //<editor-fold defaultstate="collapsed" desc=" Hashing & Comparing ">
+    //<editor-fold defaultstate="collapsed" desc=" Overrides ">
     @Override
     public int hashCode() { return java.util.Objects.hash(s, i, j, k); }
     @Override
