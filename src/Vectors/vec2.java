@@ -16,11 +16,11 @@ public class vec2 implements Comparable<vec2> {
      */
     public vec2() { x = 0; y = 0; }
     /**
-     * Constructor that fills all components with the input.
+     * Constructor that fills all components with the one input.
      * 
-     * @param w What each component will be ( w , w ) .
+     * @param a What each component will be ( a , a ) .
      */
-    public vec2(float w) { x = w; y = w; }
+    public vec2(float a) { x = a; y = a; }
     /**
      * Full explicit constructor.
      * 

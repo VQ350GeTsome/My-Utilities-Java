@@ -16,11 +16,11 @@ public class vec3 implements Comparable<vec3> {
      */
     public vec3() { x = 0.0f; y = 0.0f; z = 0.0f; }
     /**
-     * Constructor that fills all components with the input.
+     * Constructor that fills all components with the one input.
      * 
-     * @param w What each component will be ( w , w , w ) .
+     * @param a What each component will be ( a , a , a ) .
      */
-    public vec3(float w) { x = w; y = w; z = w; }
+    public vec3(float a) { x = a; y = a; z = a; }
     /**
      * Full explicit constructor with x , y , & z components { x , y , z } .
      * 
@@ -33,27 +33,23 @@ public class vec3 implements Comparable<vec3> {
     /**
      * Constructor using a vec2. The vec2's values will be used for x & y.
      * 
-     * @param v The vec2 to be used. 
+     * @param xy The vec2 to be used. 
      * @param z The z component.
      */
-    public vec3(vec2 v, float z) { x = v.x; y = v.y; this.z = z; }
+    public vec3(vec2 xy, float z) { x = xy.x; y = xy.y; this.z = z; }
     /**
      * Constructor using a vec2. The vec2's values will be used for y & z.
      * 
      * @param x The x component.
-     * @param v The vec2 to be used.
+     * @param yz The vec2 to be used.
      */
-    public vec3(float x, vec2 v) { this.x = x; y = v.x; z = v.y; }
+    public vec3(float x, vec2 yz) { this.x = x; y = yz.x; z = yz.y; }
     
     /**
      * Copy constructor.
      * @param copy The vec3 to be copied
      */
-    public vec3(vec3 copy) {
-        x = copy.x;
-        y = copy.y;
-        z = copy.z;
-    }
+    public vec3(vec3 copy) { x = copy.x; y = copy.y; z = copy.z; }
     //</editor-fold>
 
     //<editor-fold defaultstate="collapsed" desc=" Simple Scalar Operators ">
@@ -351,8 +347,7 @@ public class vec3 implements Comparable<vec3> {
     }
     
     /**
-     * Normalizes the input quaternion, and uses 
-     * it to calculate a new rotated vector.
+     * Uses a quaternion to rotate this vector by some amount.
      * 
      * @param q The quaternion to be used in the rotating. 
      * @return A new rotated vector.
@@ -360,26 +355,29 @@ public class vec3 implements Comparable<vec3> {
     public vec3 rotate(ComplexNumbers.Quaternion q) { return q.rotate(this); }
     
     /**
-     * Flips the components.
+     * Flips the components. 
+     * This is equivalent to .zyx().
      * 
      * @return A new vector equal to ( z , y , x ) .
      */
-    public vec3 flip() { return new vec3(z, y, x); }
+    public vec3 flip() { return this.zyx(); }
     /**
-     * Shifts all components to the right
+     * Shifts all components to the right. 
+     * This is equivalent to .zxy().
      * 
      * @return A new vector equal to ( z , x , y ) .
      */
     public vec3 shiftRight() { return this.zxy(); }
     /**
-     * Shifts all components to the left.
+     * Shifts all components to the left. 
+     * This is equivalent to .yzx().
      * 
      * @return A new vector equal to ( y , z , x ) .
      */
     public vec3 shiftLeft() { return this.yzx(); }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" java.awt.Color methods & constructors ">
+    //<editor-fold defaultstate="collapsed" desc=" java.awt.Color Methods & Constructors ">
     /**
      * From java.awt.Color constructor. { r , g , b }
      * 
@@ -399,7 +397,7 @@ public class vec3 implements Comparable<vec3> {
     }
     //</editor-fold>
 
-    //<editor-fold defaultstate="collapsed" desc=" String methods & constructors ">
+    //<editor-fold defaultstate="collapsed" desc=" String Methods & Constructors ">
     @Override
     public String toString() { return "(" + x + " : " + y + " : " + z + ")"; }
     public String[] toStringArray() { return new String[] { ""+x, ""+y, ""+z }; }
@@ -425,17 +423,62 @@ public class vec3 implements Comparable<vec3> {
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Swizzle Methods ">
+    /**
+     * Swizzle method to extract the x & y components.
+     * @return The x & y components as a vec2.
+     */
     public vec2 xy() { return new vec2(x, y); }
+    /**
+     * Swizzle method to extract the x & z components.
+     * 
+     * @return The x & z components as a vec2.
+     */
     public vec2 xz() { return new vec2(x, z); }
     
+    /**
+     * Swizzle method to extract the y & x components.
+     * 
+     * @return The y & x components as a vec2.
+     */
     public vec2 yx() { return new vec2(y, x); }
+    /**
+     * Swizzle method to extract the y & z components.
+     * 
+     * @return The z & z components as a vec2.
+     */
     public vec2 yz() { return new vec2(y, z); }
     
+    /**
+     * Swizzle method to extract the z & x components.
+     * 
+     * @return The z & x components as a vec2.
+     */
     public vec2 zx() { return new vec2(z, x); }
+    /**
+     * Swizzle method to extract the z & y components.
+     * 
+     * @return The z & y components as a vec2.
+     */
     public vec2 zy() { return new vec2(z, y); }
     
+    /**
+     * Swizzle method to shift everything to the right.
+     * 
+     * @return A new vector equal to ( z , x , y ) .
+     */
     public vec3 zxy() { return new vec3(z, x, y); }
+    /**
+     * Swizzle method to shift everything to the left.
+     * 
+     * @return A new vector equal to ( z , x , y ) .
+     */
     public vec3 yzx() { return new vec3(y, z, x); }
+    /**
+     * Swizzle method to flip everything.
+     * 
+     * @return A new vector equal to ( z , y , x ) .
+     */
+    public vec3 zyx() { return new vec3(z, y, x); }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" Miscellaneous ">
@@ -479,7 +522,5 @@ public class vec3 implements Comparable<vec3> {
     @Override
     public int compareTo(vec3 o) { return Float.compare(lengthSqrd(), o.lengthSqrd()); }
     //</editor-fold>
-    
-    
     
 }
