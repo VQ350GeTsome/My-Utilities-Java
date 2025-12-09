@@ -9,7 +9,7 @@ package Vectors;
 public class bvec4 implements Comparable<bvec4> {
 
     //The four booleans.
-    boolean a, b, c, d;
+    public boolean a, b, c, d;
 
     //<editor-fold defaultstate="collapsed" desc=" Constructors ">
     /**
