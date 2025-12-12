@@ -1,11 +1,11 @@
-package Matrices;
+package Matrix;
 
 /**
  * A matrix class with most commonly used functions.
  * 
  * @author Harrison Davis
  */
-public class Matrix {
+public class Matrix implements Iterable<float[]> {
 
     // The matrix.
     private float[][] mat;
@@ -33,6 +33,7 @@ public class Matrix {
      */
     public Matrix(float[][] data) {
         r = data.length; c = data[0].length;
+        this.mat = new float[r][c];
         for (int i = 0; this.r > i; i++) for (int j = 0; this.c > j; j++) 
             this.mat[i][j] = data[i][j];
     }
@@ -186,7 +187,7 @@ public class Matrix {
                 );
         Matrix result = new Matrix(this.r, o.c);
         
-        for (int i = 0; this.r > i; i++) for (int j = 0; o.r > j; j++) 
+        for (int i = 0; this.r > i; i++) for (int j = 0; o.c > j; j++) 
             for (int k = 0; this.c > k; k++) {
                 result.mat[i][j] += this.mat[i][k] * o.mat[k][j];
             }
@@ -507,6 +508,26 @@ public class Matrix {
             normalized.setValue(i, j, this.mat[i][j] / n);
         return normalized;
     }
+    
+    /**
+     * @return A new Matrix that is this Matrix but flipped over the diagonal.
+     */
+    public Matrix transpose() {
+        Matrix transposed = new Matrix(this.c, this.r);
+        for (int i = 0; this.r > i; i++) for (int j = 0; this.c > j; j++) 
+            transposed.mat[j][i] = this.mat[i][j];
+        return transposed;
+    }
+    
+    public void mutate(java.util.function.Function<Float, Float> mutator) {
+        for (int i = 0; this.r > i; i++) for (int j = 0; this.c > j; j++) 
+            this.mat[i][j] = mutator.apply(this.mat[i][j]);
+    }
+    public Matrix mutateCopy(java.util.function.Function<Float, Float> mutator) {
+        Matrix copy = new Matrix(this);
+               copy.mutate(mutator);
+        return copy;
+    }
     //</editor-fold>
     
     //<editor-fold defaultstate="collapsed" desc=" String Methods ">
@@ -548,6 +569,19 @@ public class Matrix {
     public int hashCode() {
         int hash = java.util.Arrays.deepHashCode(mat);
         return hash ^ (31 * r + c);
+    }
+    
+    @Override
+    public java.util.Iterator<float[]> iterator() {
+        return new java.util.Iterator<float[]>() {
+            private int i = 0;
+
+            @Override
+            public boolean hasNext() { return i < r; }
+
+            @Override
+            public float[] next() { return mat[i++]; }
+        };
     }
     //</editor-fold>  
     
